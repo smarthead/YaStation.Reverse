@@ -1,4 +1,4 @@
-﻿namespace YaStation.Reverse.Core.Connection
+﻿namespace YaStation.Reverse.Core.Yandex.Api
 {
     public class AuthByLoginRequest
     {

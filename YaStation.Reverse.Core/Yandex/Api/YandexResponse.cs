@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace YaStation.Reverse.Core.Connection
+namespace YaStation.Reverse.Core.Yandex.Api
 {
     public abstract class YandexResponse
     {

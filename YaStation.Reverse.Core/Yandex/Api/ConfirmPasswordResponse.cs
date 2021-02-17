@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace YaStation.Reverse.Core.Connection
+namespace YaStation.Reverse.Core.Yandex.Api
 {
     public class ConfirmPasswordResponse : YandexResponse
     {
