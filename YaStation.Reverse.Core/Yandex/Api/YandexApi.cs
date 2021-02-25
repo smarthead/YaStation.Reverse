@@ -122,7 +122,7 @@ namespace YaStation.Reverse.Core.Yandex.Api
             if (!authByTokenResponse.IsSucсess)
                 throw new InvalidOperationException();
 
-            var url = $"{authByTokenResponse.PassportHost}/auth/session?track_id={authByTokenResponse.TrackId}";
+            var url = $"{authByTokenResponse.PassportHost}auth/session?track_id={authByTokenResponse.TrackId}";
 
             var response = await _api
                 .CallAsync(new HttpRequestMessage(HttpMethod.Get, url));

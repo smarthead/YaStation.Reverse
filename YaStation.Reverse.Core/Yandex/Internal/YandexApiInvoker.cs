@@ -25,6 +25,7 @@ namespace YaStation.Reverse.Core.Yandex.Internal
 
             _httpClient = new HttpClient(_httpClientHandler);
             _httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(DefaultUserAgent);
+            _httpClient.DefaultRequestHeaders.Connection.TryParseAdd("keep-alive");
         }
 
         public void SetCookies(CookieCollection cookies)
