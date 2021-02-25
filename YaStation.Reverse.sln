@@ -6,6 +6,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{70E77AA5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.Core.Tests", "YaStation.Reverse.Core.Tests\YaStation.Reverse.Core.Tests.csproj", "{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.Quasar", "YaStation.Reverse.Quasar\YaStation.Reverse.Quasar.csproj", "{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF} = {70E77AA5-9BB9-425D-AB89-5F611791A7A1}

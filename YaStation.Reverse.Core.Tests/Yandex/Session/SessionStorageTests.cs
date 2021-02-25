@@ -6,23 +6,22 @@ namespace YaStation.Reverse.Core.Tests.Yandex.Session
 {
     public class SessionStorageTests
     {
-        private readonly string _emptyFile= "./empty.session";
-        private readonly string _sessionFile= "./ya.session";
-        private readonly string _newFile= "./new.session";
-        
+        private const string EmptyFile = "./empty.session";
+        private const string NewFile = "./new.session";
+
         [Fact]
         public void SessionStorage_Get_Should_Return_Null_For_Empty_File()
         {
-            var sessionStorage = new SessionStorage(_emptyFile);
+            var sessionStorage = new SessionStorage(EmptyFile);
             var session = sessionStorage.Get();
             
             Assert.Null(session);
         }
         
         [Fact]
-        public void SessionStorage_Save_Should_Save_Coockies_In_File()
+        public void SessionStorage_Save_Should_Save_Cookies_In_File()
         {
-            var sessionStorage = new SessionStorage(_newFile);
+            var sessionStorage = new SessionStorage(NewFile);
             var expected = new Core.Yandex.Session.Session
             {
                 XToken = "MY_STRONG_SECRET_TOKEN",

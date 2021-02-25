@@ -16,11 +16,11 @@ namespace YaStation.Reverse.Core.Yandex.Session
         public ISession Get()
         {
             if (!File.Exists(_path))
-                return null;
+                return new Session();
 
             var content = File.ReadAllText(_path);
             return string.IsNullOrEmpty(content) 
-                ? null 
+                ? new Session() 
                 : JsonSerializer.Deserialize<Session>(content);
         }
 
@@ -32,6 +32,14 @@ namespace YaStation.Reverse.Core.Yandex.Session
             var sessionContent = JsonSerializer.Serialize(session);
             
             File.WriteAllText(_path, sessionContent);
+        }
+
+        public void Clear()
+        {
+            if (!File.Exists(Path.GetFullPath(_path)))
+                return;
+            
+            File.Delete(_path);
         }
     }
 }

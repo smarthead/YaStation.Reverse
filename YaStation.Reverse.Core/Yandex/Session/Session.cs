@@ -4,8 +4,8 @@ namespace YaStation.Reverse.Core.Yandex.Session
 {
     public class Session : ISession
     {
-        public string XToken { get; init; }
-        
-        public CookieCollection Cookies { get; init; }
+        public string XToken { get; set; }
+
+        public CookieCollection Cookies { get; set; } = new();
     }
 }
