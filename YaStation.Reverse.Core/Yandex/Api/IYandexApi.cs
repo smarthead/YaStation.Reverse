@@ -8,6 +8,8 @@ namespace YaStation.Reverse.Core.Yandex.Api
     public interface IYandexApi
     {
         Task<bool> IsAuthorizedAsync();
+
+        string GetXToken();
         
         Task AuthorizeByLoginAsync(AuthByLoginRequest request);
         

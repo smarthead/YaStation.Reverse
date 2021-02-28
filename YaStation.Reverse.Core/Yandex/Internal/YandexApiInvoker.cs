@@ -1,10 +1,10 @@
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using YaStation.Reverse.Core.Common.CookieContainer;
+using YaStation.Reverse.Core.Yandex.Api;
 
 namespace YaStation.Reverse.Core.Yandex.Internal
 {
@@ -43,13 +43,20 @@ namespace YaStation.Reverse.Core.Yandex.Internal
             _httpClientHandler.CookieContainer = new CookieContainer();
         }
 
-        public async Task<TOut> CallAsync<TOut>(HttpRequestMessage request, bool skipAuth, CancellationToken token)
+        public async Task<ApiResponse<TOut>> CallAsync<TOut>(HttpRequestMessage request, bool skipAuth, CancellationToken token)
         {
             var response = await CallAsync(request, skipAuth, token);
             var text = await response.Content.ReadAsStringAsync(token);
             
-            return JsonSerializer
+            var data = JsonSerializer
                 .Deserialize<TOut>(text);
+
+            return new ApiResponse<TOut>
+            {
+                Data = data,
+                RawMessage = text,
+                StatusCode = response.StatusCode
+            };
         }
 
         public async Task<HttpResponseMessage> CallAsync(HttpRequestMessage request, bool skipAuth = false, CancellationToken token = new CancellationToken())

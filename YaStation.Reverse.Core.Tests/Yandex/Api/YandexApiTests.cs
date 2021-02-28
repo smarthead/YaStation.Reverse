@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using YaStation.Reverse.Core.Yandex.Api;
-using YaStation.Reverse.Core.Yandex.Internal;
 using YaStation.Reverse.Core.Yandex.Session;
 
 namespace YaStation.Reverse.Core.Tests.Yandex.Api

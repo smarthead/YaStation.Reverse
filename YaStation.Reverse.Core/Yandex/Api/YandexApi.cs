@@ -15,7 +15,9 @@ namespace YaStation.Reverse.Core.Yandex.Api
         private readonly ISessionStorage _sessionStorage;
         private readonly IYandexApiInvoker _api;
 
-        public ISession Session => _session ??= (_sessionStorage.Get()) ;
+        
+        private ISession _session;
+        private ISession Session => _session ??= (_sessionStorage.Get());
         
         private readonly Dictionary<string, string> _yandexUrls = new()
         {
@@ -24,9 +26,7 @@ namespace YaStation.Reverse.Core.Yandex.Api
             {"AUTH_BY_TOKEN", "https://mobileproxy.passport.yandex.net/1/bundle/auth/x_token/"},
             {"AUTH_CHECK", "https://quasar.yandex.ru/get_account_config"}
         };
-
-        private ISession _session;
-
+        
         public YandexApi(YandexApiOptions yandexApiOptions = null, 
             IYandexApiInvoker api = null, 
             ISessionStorage sessionStorage = null)
@@ -47,57 +47,56 @@ namespace YaStation.Reverse.Core.Yandex.Api
                 RequestUri = new Uri(_yandexUrls["AUTH_CHECK"])
             });
             
-            return response.IsSucсess;
+            return response.Data.IsSucсess;
         }
+
+        public string GetXToken() => Session?.XToken;
 
         public async Task AuthorizeByLoginAsync(AuthByLoginRequest request)
         {
             if (await IsAuthorizedAsync())
                 return;
-
-            if (string.IsNullOrEmpty(Session?.XToken))
-            {
-                var startAuthResponse = 
-                    await _api.CallAsync<StartAuthResponse>(new HttpRequestMessage
-                    {
-                        Method = HttpMethod.Post,
-                        Content = new FormUrlEncodedContent(new Dictionary<string, string>()
-                        {
-                            {"x_token_client_id", _yandexApiOptions.XTokenClientId},
-                            {"x_token_client_secret", _yandexApiOptions.XTokenClientSecret},
-                            {"client_id", _yandexApiOptions.ClientId},
-                            {"client_secret", _yandexApiOptions.ClientSecret},
-                            {"display_language", _yandexApiOptions.DisplayLanguage},
-                            {"force_register", _yandexApiOptions.ForceRegister.ToString()},
-                            {"is_phone_number", _yandexApiOptions.IsPhoneNumber.ToString()},
-                            {"login", request.Login},
-                        }),
-                        RequestUri = new Uri(_yandexUrls["AUTH_START"])
-                    });
-
-                if (string.IsNullOrEmpty(startAuthResponse.TrackId))
-                    throw new InvalidOperationException();
-
-                var confirmPasswordResponse = 
-                    await _api.CallAsync<ConfirmPasswordResponse>(new HttpRequestMessage
-                    {
-                        Method = HttpMethod.Post,
-                        Content = new FormUrlEncodedContent(new Dictionary<string, string>()
-                        {
-                            {"password_source", "login"},
-                            {"password", request.Password},
-                            {"track_id", startAuthResponse.TrackId},
-                        }),
-                        RequestUri = new Uri(_yandexUrls["AUTH_CONFIRM_PASSWORD"])
-                    });
-
-                if (!confirmPasswordResponse.IsSucсess)
-                    throw new InvalidOperationException();
-                
-                Session.XToken = confirmPasswordResponse.XToken;
-                _sessionStorage.Save(Session);
-            }
             
+            var startAuthResponse = 
+                await _api.CallAsync<StartAuthResponse>(new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    Content = new FormUrlEncodedContent(new Dictionary<string, string>()
+                    {
+                        {"x_token_client_id", _yandexApiOptions.XTokenClientId},
+                        {"x_token_client_secret", _yandexApiOptions.XTokenClientSecret},
+                        {"client_id", _yandexApiOptions.ClientId},
+                        {"client_secret", _yandexApiOptions.ClientSecret},
+                        {"display_language", _yandexApiOptions.DisplayLanguage},
+                        {"force_register", _yandexApiOptions.ForceRegister.ToString()},
+                        {"is_phone_number", _yandexApiOptions.IsPhoneNumber.ToString()},
+                        {"login", request.Login},
+                    }),
+                    RequestUri = new Uri(_yandexUrls["AUTH_START"])
+                });
+
+            if (string.IsNullOrEmpty(startAuthResponse.Data.TrackId))
+                throw new InvalidOperationException();
+
+            var confirmPasswordResponse = 
+                await _api.CallAsync<ConfirmPasswordResponse>(new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    Content = new FormUrlEncodedContent(new Dictionary<string, string>()
+                    {
+                        {"password_source", "login"},
+                        {"password", request.Password},
+                        {"track_id", startAuthResponse.Data.TrackId},
+                    }),
+                    RequestUri = new Uri(_yandexUrls["AUTH_CONFIRM_PASSWORD"])
+                });
+
+            if (!confirmPasswordResponse.Data.IsSucсess)
+                throw new InvalidOperationException();
+            
+            Session.XToken = confirmPasswordResponse.Data.XToken;
+            _sessionStorage.Save(Session);
+
             await AuthorizeByXToken(Session?.XToken);
         }
 
@@ -119,10 +118,10 @@ namespace YaStation.Reverse.Core.Yandex.Api
                     Headers = { {"Ya-Consumer-Authorization", $"OAuth {xToken}"}}
                 });
 
-            if (!authByTokenResponse.IsSucсess)
+            if (!authByTokenResponse.Data.IsSucсess)
                 throw new InvalidOperationException();
 
-            var url = $"{authByTokenResponse.PassportHost}auth/session?track_id={authByTokenResponse.TrackId}";
+            var url = $"{authByTokenResponse.Data.PassportHost}auth/session?track_id={authByTokenResponse.Data.TrackId}";
 
             var response = await _api
                 .CallAsync(new HttpRequestMessage(HttpMethod.Get, url));
@@ -139,22 +138,35 @@ namespace YaStation.Reverse.Core.Yandex.Api
             IDictionary<string, string> additionalHeaders, 
             CancellationToken token = new())
         {
-            return await _api.CallAsync<TOut>(new HttpRequestMessage()
+            return await SendAsync<TOut>(new HttpRequestMessage
             {
-                Method = HttpMethod.Get,
-                RequestUri = url
-            }, token: token);
+                RequestUri = url,
+                Method = HttpMethod.Get
+            }, _yandexApiOptions.RetryCount, token);
         }
 
         public async Task<TOut> PostAsync<TIn, TOut>(Uri url, TIn request, 
             IDictionary<string, string> additionalHeaders, 
             CancellationToken token = new())
         {
-            return await _api.CallAsync<TOut>(new HttpRequestMessage()
+            return await SendAsync<TOut>(new HttpRequestMessage
             {
-                Method = HttpMethod.Post,
-                RequestUri = url
-            }, token: token);
+                RequestUri = url,
+                Method = HttpMethod.Post
+            }, _yandexApiOptions.RetryCount, token);
+        }
+
+        private async Task<TOut> SendAsync<TOut>(HttpRequestMessage request, int retryCount,
+            CancellationToken token = new())
+        {
+            var result = await _api.CallAsync<TOut>(request, token: token);
+
+            if (result.StatusCode != HttpStatusCode.Unauthorized || retryCount == 0) 
+                return result.Data;
+            
+            await AuthorizeByXToken(Session.XToken);
+            return await SendAsync<TOut>(request, retryCount, token);
+
         }
     }
 }

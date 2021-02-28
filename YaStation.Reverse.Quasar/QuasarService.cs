@@ -1,58 +1,70 @@
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using YaStation.Reverse.Core.Yandex.Api;
 
 namespace YaStation.Reverse.Quasar
 {
     public class QuasarService : IQuasarService
     {
+        private readonly QuasarOptions _options;
         private readonly IYandexApi _yandexApi;
 
-        public QuasarService(IYandexApi yandexApi)
+        private readonly string _baseUrl = "https://iot.quasar.yandex.ru/m/user";
+        
+        public QuasarService(IOptions<QuasarOptions> options, IYandexApi yandexApi) 
+            : this(options.Value, yandexApi)
         {
-            _yandexApi = yandexApi;
         }
         
-        public Task<DeviceListItem> GetDevices()
+        public QuasarService(QuasarOptions options, IYandexApi yandexApi)
+        {
+            _options = options;
+            _yandexApi = yandexApi;
+        }
+
+        public Task<DeviceListItem> GetDevicesAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Device> GetDevice()
+        public Task<Device> GetDeviceAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ScenarioListItem> GetScenarios()
+        public Task<ScenarioListItem> GetScenariosAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Scenario> AddScenario()
+        public Task<Scenario> AddScenarioAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Intent> AddIntent()
+        public Task<Intent> AddIntentAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task SendToStation()
+        public Task SendToStationAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task CallDeviceAction()
+        public Task CallDeviceActionAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<DeviceConfiguration> GetDeviceConfiguration()
+        public Task<DeviceConfiguration> GetDeviceConfigurationAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
 
-        public Task SetDeviceConfiguration()
+        public Task SetDeviceConfigurationAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
         }
