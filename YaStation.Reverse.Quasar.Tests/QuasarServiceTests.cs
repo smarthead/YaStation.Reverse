@@ -1,41 +1,37 @@
-using System;
 using System.Threading.Tasks;
 using Xunit;
 using YaStation.Reverse.Core.Yandex.Api;
 using YaStation.Reverse.Core.Yandex.Session;
 using YaStation.Reverse.TestUtilities;
 
-namespace YaStation.Reverse.Core.Tests.Yandex.Api
+namespace YaStation.Reverse.Quasar.Tests
 {
-    public class YandexApiTests : IDisposable
+    public class QuasarServiceTests
     {
         private readonly ISessionStorage _store;
         private readonly IYandexApi _yandexApi;
 
-        public YandexApiTests()
+        public QuasarServiceTests()
         {
             _store = new SessionStorage("./ya.session");
             _yandexApi = new YandexApi(sessionStorage: _store);
         }
         
-        [Theory]
+        [Theory(Skip = "Debug")]
         [EnvData("ya_login", "ya_password")]
-        public async Task AuthorizeByLoginAsync(string login, string password)
+        public async Task Test(string login, string password)
         {
             await _yandexApi.AuthorizeByLoginAsync(new AuthByLoginRequest
             {
                 Login = login,
                 Password = password
             });
-
-            var isAuthorized = await _yandexApi.IsAuthorizedAsync();
             
-            Assert.True(isAuthorized);
-        }
+            var service = new QuasarService(_yandexApi);
 
-        public void Dispose()
-        {
-            _store.Clear();
+            var devices = await service.GetDevicesAsync();
+            
+            Assert.NotNull(devices);
         }
     }
 }

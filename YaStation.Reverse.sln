@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.Core.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.Quasar", "YaStation.Reverse.Quasar\YaStation.Reverse.Quasar.csproj", "{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.Quasar.Tests", "YaStation.Reverse.Quasar.Tests\YaStation.Reverse.Quasar.Tests.csproj", "{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaStation.Reverse.TestUtilities", "YaStation.Reverse.TestUtilities\YaStation.Reverse.TestUtilities.csproj", "{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,8 +30,18 @@ Global
 		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46B6EB8D-4075-4BD5-9BA9-8D6741E8B8D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{311898E4-7F86-4DCC-AA94-A85BEAB1DBBF} = {70E77AA5-9BB9-425D-AB89-5F611791A7A1}
+		{37415062-A7AE-4F7B-8E6D-6BB2C5A264E0} = {70E77AA5-9BB9-425D-AB89-5F611791A7A1}
+		{CACB09FC-27B9-4DDE-857C-A0DDAA7107A0} = {70E77AA5-9BB9-425D-AB89-5F611791A7A1}
 	EndGlobalSection
 EndGlobal

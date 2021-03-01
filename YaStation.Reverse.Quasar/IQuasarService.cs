@@ -1,19 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
+using YaStation.Reverse.Quasar.Devices;
 
 namespace YaStation.Reverse.Quasar
 {
-    public class DeviceListItem
-    {
-        
-    }
-    
     public class ScenarioListItem
-    {
-        
-    }
-    
-    public class Device
     {
         
     }
@@ -35,16 +26,12 @@ namespace YaStation.Reverse.Quasar
     
     public interface IQuasarService
     {
-        Task<DeviceListItem> GetDevicesAsync(CancellationToken token);
+        Task<GetDevicesResponse> GetDevicesAsync(CancellationToken token);
         
-        Task<Device> GetDeviceAsync(CancellationToken token);
-
         Task<ScenarioListItem> GetScenariosAsync(CancellationToken token);
         
         Task<Scenario> AddScenarioAsync(CancellationToken token);
-        
-        Task<Intent> AddIntentAsync(CancellationToken token);
-        
+
         Task SendToStationAsync(CancellationToken token);
         
         Task CallDeviceActionAsync(CancellationToken token);

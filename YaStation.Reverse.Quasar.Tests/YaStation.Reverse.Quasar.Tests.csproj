@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\YaStation.Reverse.Core\YaStation.Reverse.Core.csproj" />
+      <ProjectReference Include="..\YaStation.Reverse.Quasar\YaStation.Reverse.Quasar.csproj" />
       <ProjectReference Include="..\YaStation.Reverse.TestUtilities\YaStation.Reverse.TestUtilities.csproj" />
     </ItemGroup>
 
