@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using YaStation.Reverse.Core.Yandex.Internal;
 using YaStation.Reverse.Core.Yandex.Session;
 
@@ -41,7 +43,7 @@ namespace YaStation.Reverse.Core.Yandex.Api
         
         public async Task<bool> IsAuthorizedAsync()
         {
-            var response = await _api.CallAsync<CheckAuthorizeResponse>(new HttpRequestMessage
+            var response = await _api.CallAsync<GetConfigResponse>(new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(_yandexUrls["AUTH_CHECK"])
@@ -130,19 +132,33 @@ namespace YaStation.Reverse.Core.Yandex.Api
                 await response.Content.ReadAsStringAsync();
 
             Session.Cookies = _api.GetCookies();
-            
             _sessionStorage.Save(Session);
         }
 
-        public async Task<TOut> GetAsync<TIn, TOut>(Uri url, TIn query, 
-            IDictionary<string, string> additionalHeaders, 
-            CancellationToken token = new())
+        public async Task<TOut> GetAsync<TOut>(Uri url, IDictionary<string, string> additionalHeaders = null, CancellationToken token = new CancellationToken())
         {
             return await SendAsync<TOut>(new HttpRequestMessage
             {
                 RequestUri = url,
                 Method = HttpMethod.Get
             }, _yandexApiOptions.RetryCount, token);
+        }
+
+        public async Task<TOut> GetAsync<TIn, TOut>(Uri url, TIn query, 
+            IDictionary<string, string> additionalHeaders, 
+            CancellationToken token = new())
+        {
+            var queryParams = typeof(TIn)
+                .GetProperties()
+                .Where(x => x.GetValue(query, null) != null)
+                .Select(x =>
+                    $"{x.Name.ToLower()}={HttpUtility.UrlEncode(x.GetValue(query, null)?.ToString())}")
+                .ToArray();
+
+            return await GetAsync<TOut>(new UriBuilder(url)
+            {
+                Query = string.Join("&", queryParams)
+            }.Uri, additionalHeaders, token);
         }
 
         public async Task<TOut> PostAsync<TIn, TOut>(Uri url, TIn request, 

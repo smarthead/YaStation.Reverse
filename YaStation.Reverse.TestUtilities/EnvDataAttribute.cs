@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace YaStation.Reverse.Core.Tests
+namespace YaStation.Reverse.TestUtilities
 {
     public class EnvDataAttribute : DataAttribute
     {

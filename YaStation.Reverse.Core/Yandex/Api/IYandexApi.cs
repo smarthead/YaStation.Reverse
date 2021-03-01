@@ -15,6 +15,9 @@ namespace YaStation.Reverse.Core.Yandex.Api
         
         Task AuthorizeByXToken(string xToken);
 
+        Task<TOut> GetAsync<TOut>(Uri url,
+            IDictionary<string, string> additionalHeaders = null, CancellationToken token = new());
+
         Task<TOut> GetAsync<TIn, TOut>(Uri url, TIn query, 
             IDictionary<string, string> additionalHeaders = null, CancellationToken token = new());
         
