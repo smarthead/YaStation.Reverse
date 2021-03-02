@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using YaStation.Reverse.Core.Yandex.Api;
@@ -30,8 +31,14 @@ namespace YaStation.Reverse.Quasar.Tests
             var service = new QuasarService(_yandexApi);
 
             var devices = await service.GetDevicesAsync();
-            
+            var scenarious = await service.GetScenariosAsync();
+            var device = await service
+                .GetDeviceAsync(
+                    devices.AllDevices.First(x => x.Type == "devices.types.smart_speaker.yandex.station")
+                .Id);
+
             Assert.NotNull(devices);
+            Assert.NotNull(scenarious);
         }
     }
 }

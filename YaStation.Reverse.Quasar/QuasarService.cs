@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using YaStation.Reverse.Core.Yandex.Api;
 using YaStation.Reverse.Quasar.Devices;
+using YaStation.Reverse.Quasar.Scenarios;
 
 namespace YaStation.Reverse.Quasar
 {
@@ -23,10 +22,15 @@ namespace YaStation.Reverse.Quasar
             => await _yandexApi
                 .GetAsync<GetDevicesResponse>(new Uri($"{_baseUrl}/devices"),token: token);
 
-        public Task<ScenarioListItem> GetScenariosAsync(CancellationToken token = new())
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<GetDeviceResponse> GetDeviceAsync(Guid deviceId, CancellationToken token = new()) 
+            => await _yandexApi
+                .GetAsync<GetDeviceResponse>(
+                    new Uri($"{_baseUrl}/devices/{deviceId}"),
+                    token: token);
+
+        public async Task<GetScenariosResponse> GetScenariosAsync(CancellationToken token = new())
+            => await _yandexApi
+                .GetAsync<GetScenariosResponse>(new Uri($"{_baseUrl}/scenarios"),token: token);
 
         public Task<Scenario> AddScenarioAsync(CancellationToken token = new())
         {

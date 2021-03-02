@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using YaStation.Reverse.Core.Yandex.Api;
 
@@ -20,5 +21,12 @@ namespace YaStation.Reverse.Quasar.Devices
 
         [JsonPropertyName("speakers")]
         public Device[] Speakers { get; set; }
+
+        [JsonIgnore]
+        public Device[] AllDevices => Rooms
+            .SelectMany(x => x.Devices)
+            .Concat(UnconfiguredDevices)
+            .Concat(Speakers)
+            .ToArray();
     }
 }
