@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace YaStation.Reverse.Quasar.Devices
+namespace YaStation.Reverse.Quasar.Common.Properties
 {
     public class Property
     {
