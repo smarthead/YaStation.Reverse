@@ -62,9 +62,6 @@ namespace YaStation.Reverse.Core.Yandex.Internal
         public async Task<HttpResponseMessage> CallAsync(HttpRequestMessage request, bool skipAuth = false, CancellationToken token = new CancellationToken())
         {
             var response = await _httpClient.SendAsync(request, token);
-
-            // todo: Реализовать обработку ошибок;
-
             return response;
         }
     }

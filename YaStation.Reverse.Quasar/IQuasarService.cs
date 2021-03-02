@@ -1,24 +1,11 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using YaStation.Reverse.Quasar.Devices;
+using YaStation.Reverse.Quasar.Scenarios;
 
 namespace YaStation.Reverse.Quasar
 {
-    public class ScenarioListItem
-    {
-        
-    }
-    
-    public class Scenario
-    {
-        
-    }
-
-    public class Intent
-    {
-        
-    }
-
     public class DeviceConfiguration
     {
         
@@ -28,7 +15,9 @@ namespace YaStation.Reverse.Quasar
     {
         Task<GetDevicesResponse> GetDevicesAsync(CancellationToken token);
         
-        Task<ScenarioListItem> GetScenariosAsync(CancellationToken token);
+        Task<GetDeviceResponse> GetDeviceAsync(Guid deviceId, CancellationToken token);
+        
+        Task<GetScenariosResponse> GetScenariosAsync(CancellationToken token);
         
         Task<Scenario> AddScenarioAsync(CancellationToken token);
 
