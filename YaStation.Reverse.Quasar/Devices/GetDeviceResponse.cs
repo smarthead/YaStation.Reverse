@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 using YaStation.Reverse.Quasar.Common.Capabilities;
+using YaStation.Reverse.Quasar.Common.Properties;
 using YaStation.Reverse.Quasar.Common.Response;
 
 namespace YaStation.Reverse.Quasar.Devices
@@ -38,7 +39,7 @@ namespace YaStation.Reverse.Quasar.Devices
         public Capability[] Capabilities { get; set; }
 
         [JsonPropertyName("properties")]
-        public object[] Properties { get; set; }
+        public Property[] Properties { get; set; }
 
         [JsonPropertyName("skill_id")]
         public string SkillId { get; set; }
