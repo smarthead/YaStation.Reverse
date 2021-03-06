@@ -11,6 +11,8 @@ namespace YaStation.Reverse.Core.Yandex.Api
 
         string GetXToken();
         
+        string GetCsrfToken();
+        
         Task AuthorizeByLoginAsync(AuthByLoginRequest request);
         
         Task AuthorizeByXToken(string xToken);

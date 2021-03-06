@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -20,13 +24,23 @@ namespace YaStation.Reverse.Core.Yandex.Api
         
         private ISession _session;
         private ISession Session => _session ??= (_sessionStorage.Get());
-        
+
+        private readonly Regex _csrfRegex = new Regex("\"csrfToken2\":\"(.+?)\"", RegexOptions.Compiled);
+        private readonly JsonSerializerOptions _serializerOptions = new()
+        {
+            IgnoreNullValues = true,
+            Converters = {
+                new JsonStringEnumMemberConverter()
+            }
+        };
+
         private readonly Dictionary<string, string> _yandexUrls = new()
         {
             {"AUTH_START", "https://mobileproxy.passport.yandex.net/2/bundle/mobile/start/"},
             {"AUTH_CONFIRM_PASSWORD", "https://mobileproxy.passport.yandex.net/1/bundle/mobile/auth/password/"},
             {"AUTH_BY_TOKEN", "https://mobileproxy.passport.yandex.net/1/bundle/auth/x_token/"},
-            {"AUTH_CHECK", "https://quasar.yandex.ru/get_account_config"}
+            {"AUTH_CHECK", "https://quasar.yandex.ru/get_account_config"},
+            {"GET_CSRF_TOKEN", "https://yandex.ru/quasar/iot"}
         };
         
         public YandexApi(YandexApiOptions yandexApiOptions = null, 
@@ -53,6 +67,8 @@ namespace YaStation.Reverse.Core.Yandex.Api
         }
 
         public string GetXToken() => Session?.XToken;
+        
+        public string GetCsrfToken() => Session?.Csrf;
 
         public async Task AuthorizeByLoginAsync(AuthByLoginRequest request)
         {
@@ -165,9 +181,15 @@ namespace YaStation.Reverse.Core.Yandex.Api
             IDictionary<string, string> additionalHeaders, 
             CancellationToken token = new())
         {
+            var content = JsonSerializer.Serialize(request, _serializerOptions);
+            if (string.IsNullOrEmpty(GetCsrfToken())) 
+                await GetCsrfTokenAsync();
+            
             return await SendAsync<TOut>(new HttpRequestMessage
             {
                 RequestUri = url,
+                Headers = { {"x-csrf-token", GetCsrfToken()} },
+                Content = new StringContent(content, Encoding.UTF8, "application/json"),
                 Method = HttpMethod.Post
             }, _yandexApiOptions.RetryCount, token);
         }
@@ -179,10 +201,34 @@ namespace YaStation.Reverse.Core.Yandex.Api
 
             if (result.StatusCode != HttpStatusCode.Unauthorized || retryCount == 0) 
                 return result.Data;
-            
-            await AuthorizeByXToken(Session.XToken);
-            return await SendAsync<TOut>(request, retryCount, token);
 
+            if (result.StatusCode == HttpStatusCode.Forbidden && request.Method == HttpMethod.Post)
+                await GetCsrfTokenAsync();
+            else
+                await AuthorizeByXToken(Session.XToken);
+
+            return await SendAsync<TOut>(request, retryCount, token);
+        }
+
+        private async Task GetCsrfTokenAsync()
+        {
+            var response = await _api.CallAsync(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(_yandexUrls["GET_CSRF_TOKEN"])
+            });
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var matches = _csrfRegex.Matches(content);
+            if (!matches.Any())
+                throw new InvalidOperationException();
+            
+            Session.Csrf = matches
+                .First()
+                .Groups[1].Value;
+            
+            _sessionStorage.Save(Session);
         }
     }
 }

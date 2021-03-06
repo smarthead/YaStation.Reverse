@@ -12,6 +12,6 @@ namespace YaStation.Reverse.Quasar.Devices
         public string Name { get; set; }
 
         [JsonPropertyName("devices")]
-        public Device[] Devices { get; set; }
+        public DeviceListItem[] Devices { get; set; }
     }
 }

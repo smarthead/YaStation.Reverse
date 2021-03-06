@@ -32,16 +32,19 @@ namespace YaStation.Reverse.Quasar
             => await _yandexApi
                 .GetAsync<GetScenariosResponse>(new Uri($"{_baseUrl}/scenarios"),token: token);
 
-        public Task<Scenario> AddScenarioAsync(CancellationToken token = new())
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<GetScenarioResponse> GetScenarioAsync(Guid scenarioId, CancellationToken token=new())
+            => await _yandexApi
+                .GetAsync<GetScenarioResponse>(new Uri($"{_baseUrl}/scenarios/{scenarioId}/edit"), token:token);
 
-        public Task SendToStationAsync(CancellationToken token = new())
+        public async Task<Scenario> AddScenarioAsync(AddScenarioRequest request, CancellationToken token=new ())
         {
-            throw new System.NotImplementedException();
-        }
+            var result = await _yandexApi
+                .PostAsync<AddScenarioRequest, AddScenarioResponse>(
+                    new Uri($"{_baseUrl}/scenarios"), request, token: token);
 
+            return null;
+        }
+        
         public Task CallDeviceActionAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();
@@ -51,7 +54,7 @@ namespace YaStation.Reverse.Quasar
         {
             throw new System.NotImplementedException();
         }
-
+        
         public Task SetDeviceConfigurationAsync(CancellationToken token = new())
         {
             throw new System.NotImplementedException();

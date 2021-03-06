@@ -13,7 +13,7 @@ namespace YaStation.Reverse.Core.Yandex.Internal
         private readonly HttpClientHandler _httpClientHandler;
         private readonly HttpClient _httpClient;
         private const string DefaultUserAgent = "com.yandex.mobile.auth.sdk/7.15.0.715001762";
-
+        
         public YandexApiInvoker()
         {
             _httpClientHandler = new HttpClientHandler

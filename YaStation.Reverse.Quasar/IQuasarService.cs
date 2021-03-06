@@ -19,10 +19,10 @@ namespace YaStation.Reverse.Quasar
         
         Task<GetScenariosResponse> GetScenariosAsync(CancellationToken token);
         
-        Task<Scenario> AddScenarioAsync(CancellationToken token);
-
-        Task SendToStationAsync(CancellationToken token);
+        Task<GetScenarioResponse> GetScenarioAsync(Guid scenarioId, CancellationToken token);
         
+        Task<Scenario> AddScenarioAsync(AddScenarioRequest request, CancellationToken token);
+
         Task CallDeviceActionAsync(CancellationToken token);
         
         Task<DeviceConfiguration> GetDeviceConfigurationAsync(CancellationToken token);

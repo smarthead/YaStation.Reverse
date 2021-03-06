@@ -1,16 +1,43 @@
 using System;
 using System.Text.Json.Serialization;
 using YaStation.Reverse.Quasar.Common.Capabilities;
-using YaStation.Reverse.Quasar.Common.Properties;
 using YaStation.Reverse.Quasar.Common.Response;
+using YaStation.Reverse.Quasar.Common.Triggers;
 
-namespace YaStation.Reverse.Quasar.Devices
+namespace YaStation.Reverse.Quasar.Scenarios
 {
-    public class GetDeviceResponse : QuasarResponse
+    public class GetScenarioResponse : QuasarResponse
     {
-        [JsonPropertyName("updates_url")]
-        public string UpdatesUrl { get; set; }
+        [JsonPropertyName("scenario")]
+        public Scenario Scenario { get; set; }
+    }
 
+    public class Scenario
+    {
+        [JsonPropertyName("id")]
+        public Guid Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("triggers")]
+        public Trigger[] Triggers { get; set; }
+
+        [JsonPropertyName("icon")]
+        public string Icon { get; set; }
+
+        [JsonPropertyName("icon_url")]
+        public Uri IconUrl { get; set; }
+
+        [JsonPropertyName("devices")]
+        public ScenarioDeviceItem[] Devices { get; set; }
+
+        [JsonPropertyName("is_active")]
+        public bool IsActive { get; set; }
+    }
+
+    public class ScenarioDeviceItem
+    {
         [JsonPropertyName("id")]
         public Guid Id { get; set; }
 
@@ -32,14 +59,11 @@ namespace YaStation.Reverse.Quasar.Devices
         [JsonPropertyName("groups")]
         public object[] Groups { get; set; }
 
-        [JsonPropertyName("room")]
-        public string Room { get; set; }
-
         [JsonPropertyName("capabilities")]
         public Capability[] Capabilities { get; set; }
 
         [JsonPropertyName("properties")]
-        public Property[] Properties { get; set; }
+        public object[] Properties { get; set; }
 
         [JsonPropertyName("skill_id")]
         public string SkillId { get; set; }
